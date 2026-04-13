@@ -187,18 +187,65 @@
 // import mongoose
 
 // establish connection
+import mongoose from "mongoose";
+
+mongoose
+  .connect("mongodb+srv://guided_electron:P0lsk@_0352@cluster0.lzcdown.mongodb.net/labDB")
+//   mongodb+srv://guided_electron:<db_password>@cluster0.lzcdown.mongodb.net/
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("❌ Connection error:", err));
 
 
 // define schema
+const studentSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  major: String,
+});
 
+const Student = mongoose.model("Student", studentSchema);
 
 // create document
 
-
+async function createStudents() {
+  await Student.insertMany([
+    { name: "Ali", age: 21, major: "CS" },
+    { name: "Sara", age: 23, major: "SE" },
+  ]);
+  console.log("Inserted");
+}
 // read document
-
+// async function readStudents() {
+//   const all = await Student.find();
+//   console.log(all);
+// }
 
 // update document
+// async function updateStudent() {
+//   await Student.updateOne({ name: "Ali" }, { age: 22 });
+//   console.log("Updated Ali");
+// }
 
 
 // delete document
+// async function deleteStudent() {
+//   await Student.deleteOne({ name: "Sara" });
+//   console.log("Deleted Sara");
+// }
+
+async function run() {
+  try {
+    await createStudents();   // TODO-3
+   //  await readStudents();     // TODO-4
+   //  await updateStudent();    // TODO-5
+   //  await deleteStudent();    // TODO-6
+   //  await readStudents();     // optional: verify final result
+  } catch (err) {
+    console.error("Error:", err);
+  } finally {
+    await mongoose.disconnect();
+    console.log("Disconnected from MongoDB");
+  }
+}
+
+run();
